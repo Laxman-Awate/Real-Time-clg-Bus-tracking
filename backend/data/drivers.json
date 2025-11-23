@@ -1,0 +1,6 @@
+[
+  {"id": 1, "username": "driverA", "password": "passwordA", "name": "Driver A", "phone": "9876543210"},
+  {"id": 2, "username": "driverB", "password": "passwordB", "name": "Driver B", "phone": "9376543210"},
+  {"id": 3, "username": "driverC", "password": "passwordC", "name": "Driver C", "phone": "9176543210"}
+]
+

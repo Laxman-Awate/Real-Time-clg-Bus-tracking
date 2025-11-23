@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Mahantesh Nagar Route",
+    "stops": [
+      {"lat": 15.8500, "lng": 74.5000, "name": "Mahantesh Nagar Start"}, 
+      {"lat": 15.8550, "lng": 74.5050, "name": "Tilakwadi Stop"}, 
+      {"lat": 15.8600, "lng": 74.5100, "name": "RPD Cross"},
+      {"lat": 15.8650, "lng": 74.5150, "name": "Udyambag"},
+      {"lat": 15.8700, "lng": 74.5200, "name": "KLS GIT Campus"}
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Central Bus Stand Route",
+    "stops": [
+      {"lat": 15.8450, "lng": 74.5100, "name": "Central Bus Stand Start"}, 
+      {"lat": 15.8400, "lng": 74.5150, "name": "Market Area"}, 
+      {"lat": 15.8700, "lng": 74.5200, "name": "KLS GIT Campus"}
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Rajajinagar Route",
+    "stops": [
+      {"lat": 15.8800, "lng": 74.5300, "name": "Rajajinagar Start"}, 
+      {"lat": 15.8750, "lng": 74.5250, "name": "Shivaji Nagar"}, 
+      {"lat": 15.8700, "lng": 74.5200, "name": "KLS GIT Campus"}
+    ]
+  }
+]
+

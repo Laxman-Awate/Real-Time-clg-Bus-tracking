@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - KLS GIT Bus Tracking</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="btn primary-btn">Login</a></li> 
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="login-main">
+        <div class="login-container">
+            <div class="login-header">
+                <img src="assets/images/kls_logo.png" alt="KLS Logo" class="login-page-logo">
+                <h2>Sign in to your account</h2>
+                <p>Access the KLS GIT Bus Tracking System</p>
+            </div>
+            <form id="unified-login-form" class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <i class="fas fa-eye show-password"></i>
+                </div>
+                <button type="submit" class="btn primary-btn login-btn">Sign in</button>
+            </form>
+            <p id="error-message" class="error-message"></p>
+
+            <div class="register-link" style="margin-top: 20px;">
+                <p>Don't have an account? <a href="register.html">Register Here</a></p>
+            </div>
+
+            <div class="back-to-home">
+                <a href="index.html">&larr; Back to Home</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+                <a href="#" class="visit-website-link"><img src="assets/images/external_link_icon.png" alt="External Link Icon"> Visit Official Website</a>
+            </div>
+            <div class="footer-quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Bus Routes</a></li>
+                    <li><a href="#">Timings</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/login.js"></script>
+</body>
+</html>

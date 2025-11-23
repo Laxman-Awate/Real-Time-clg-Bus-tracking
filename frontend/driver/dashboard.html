@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="../assets/lib/leaflet/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="../assets/lib/leaflet/leaflet.js"></script>
+    <script>
+        // Configure the default icon path
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: '../assets/images/leaflet/marker-icon-2x.png',
+            iconUrl: '../assets/images/leaflet/marker-icon.png',
+            shadowUrl: '../assets/images/leaflet/marker-shadow.png'
+        });
+    </script>
+    <style>
+        #driver-dashboard-map {
+            height: 500px;
+            width: 100%;
+            min-height: 400px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        #test-map {
+            height: 300px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .leaflet-container {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="../assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" id="logout-btn" class="btn primary-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="container">
+            <h1 class="dashboard-title">Driver Dashboard</h1>
+            <p class="dashboard-subtitle" id="welcome-message">Welcome back, Rajesh Kumar</p>
+
+            <div class="dashboard-grid-driver">
+                <!-- Bus Information Card -->
+                <div class="card driver-bus-info-card">
+                    <div class="card-header-bus">
+                        <div class="bus-title-icon">
+                            <img src="../assets/images/bus_icon_small.png" alt="Bus Icon">
+                            <h3 id="driver-bus-code">GIT-001</h3>
+                        </div>
+                        <span id="driver-bus-status" class="status-inactive">Inactive</span>
+                    </div>
+                    <p class="bus-route-name" id="driver-bus-route-name">Mahantesh Nagar Route</p>
+                    
+                    <div class="bus-timing-details-driver">
+                        <div class="timing-item">
+                            <i class="far fa-clock"></i>
+                            <span>Departure</span>
+                            <strong id="driver-bus-departure-time">8:00 AM</strong>
+                        </div>
+                        <div class="timing-item">
+                            <i class="fas fa-users"></i>
+                            <span>Capacity</span>
+                            <strong id="driver-bus-capacity">40</strong>
+                        </div>
+                    </div>
+                    <button id="start-trip-btn" class="btn primary-btn">Start Trip</button>
+                    <button id="end-trip-btn" class="btn primary-btn" disabled>End Trip</button>
+                </div>
+
+                <!-- Route Information Card -->
+                <div class="card driver-route-info-card">
+                    <h3>Route Information</h3>
+                    <div class="route-detail-item">
+                        <span>Starting Point</span>
+                        <strong id="route-start-point">Mahantesh Nagar</strong>
+                    </div>
+                    <div class="route-detail-item">
+                        <span>Destination</span>
+                        <strong id="route-destination">KLS Gogte Institute of Technology</strong>
+                    </div>
+                    <h4 class="route-stops-heading">Route Stops</h4>
+                    <ul id="driver-route-stops-list">
+                        <!-- Stops will be populated by JS -->
+                        <li class="start-point"><img src="../assets/images/map_pin_green.png" alt="Start Icon"> Mahantesh Nagar</li>
+                        <li><img src="../assets/images/map_pin_blue.png" alt="Stop Icon"> Tilakwadi</li>
+                        <li><img src="../assets/images/map_pin_blue.png" alt="Stop Icon"> RPD Cross</li>
+                        <li><img src="../assets/images/map_pin_blue.png" alt="Stop Icon"> Udyambag</li>
+                        <li class="destination-point"><img src="../assets/images/map_pin_red.png" alt="Destination Icon"> KLS Gogte Institute of Technology</li>
+                    </ul>
+                </div>
+
+                <!-- Quick Actions Section -->
+                <div class="card quick-actions-card">
+                    <h3>Quick Actions</h3>
+                    <div class="action-item" id="report-issue-btn">
+                        <img src="../assets/images/report_issue_icon.png" alt="Report Issue">
+                        <div>
+                            <h4>Report Issue</h4>
+                            <p>Report bus or route problems</p>
+                        </div>
+                    </div>
+                    <div class="action-item" id="update-location-btn">
+                        <img src="../assets/images/update_location_icon.png" alt="Update Location">
+                        <div>
+                            <h4>Update Location</h4>
+                            <p>Manually update current position</p>
+                        </div>
+                    </div>
+                    <div class="action-item" id="student-count-btn">
+                        <img src="../assets/images/student_count_icon.png" alt="Student Count">
+                        <div>
+                            <h4>Student Count</h4>
+                            <p>Update passenger count</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Tracking Map -->
+            <section class="live-tracking-map-section">
+                <h2>Live Tracking</h2>
+                <div id="driver-dashboard-map" class="map-container"></div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+                <a href="#" class="visit-website-link"><img src="../assets/images/external_link_icon.png" alt="External Link Icon"> Visit Official Website</a>
+            </div>
+            <div class="footer-quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Bus Routes</a></li>
+                    <li><a href="#">Timings</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/driver_dashboard.js"></script>
+</body>
+</html>
+

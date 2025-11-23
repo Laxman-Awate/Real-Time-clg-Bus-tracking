@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "bus_number": "GIT-001",
+        "route_id": 1,
+        "assigned_driver_id": 1,
+        "departure_time": "8:00 AM",
+        "estimated_arrival": "8:45 AM",
+        "capacity": 40
+    },
+    {
+        "id": 2,
+        "bus_number": "GIT-002",
+        "route_id": 2,
+        "assigned_driver_id": 2,
+        "departure_time": "8:15 AM",
+        "estimated_arrival": "8:55 AM",
+        "capacity": 45
+    },
+    {
+        "id": 3,
+        "bus_number": "GIT-003",
+        "route_id": 3,
+        "assigned_driver_id": 3,
+        "departure_time": "7:50 AM",
+        "estimated_arrival": "8:30 AM",
+        "capacity": 35
+    },
+    {
+        "id": 4,
+        "bus_number": "GIT-004",
+        "route_id": 1, 
+        "assigned_driver_id": 1, 
+        "departure_time": "9:15 AM",
+        "estimated_arrival": "9:45 AM",
+        "capacity": 50
+    }
+]

@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "student_id": "studentA",
+        "password": "passwordA",
+        "name": "Student A",
+        "assigned_bus_id": 1 
+    },
+    {
+        "id": 2,
+        "student_id": "studentB",
+        "password": "passwordB",
+        "name": "Student B",
+        "assigned_bus_id": 2 
+    },
+    {
+        "student_id": "24u0280",
+        "password": "Laxman@2005",
+        "name": "Laxman",
+        "id": 3,
+        "assigned_bus_id": 3 
+    }
+]

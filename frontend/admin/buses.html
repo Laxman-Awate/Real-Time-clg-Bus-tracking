@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Buses</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="../assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="buses.html">Manage Buses</a></li>
+                    <li><a href="drivers.html">Manage Drivers</a></li>
+                    <li><a href="routes.html">Manage Routes</a></li>
+                    <li><a href="#" id="logout-btn" class="btn primary-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="dashboard-main">
+        <div class="container">
+            <h1 class="dashboard-title">Bus Fleet</h1>
+            <p class="dashboard-subtitle">Manage buses, routes, and drivers</p>
+
+            <button id="add-bus-btn" class="btn primary-btn add-new-btn"><i class="fas fa-plus"></i> Add New Bus</button>
+
+            <div id="bus-management-list" class="bus-fleet-list">
+                <!-- Bus data will be loaded here -->
+                <div class="bus-fleet-item card">
+                    <div class="bus-icon-details">
+                        <img src="../assets/images/bus_icon_small.png" alt="Bus Icon">
+                        <div>
+                            <h3>GIT-001</h3>
+                            <p>Capacity: 40</p>
+                        </div>
+                    </div>
+                    <div class="bus-fleet-route-info">
+                        <p class="route-name">Mahantesh Nagar Route</p>
+                        <p class="route-stops-short">Mahantesh Nagar &rarr; GIT</p>
+                    </div>
+                    <div class="bus-fleet-actions">
+                        <button class="btn secondary-btn"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn danger-btn"><i class="fas fa-trash-alt"></i> Delete</button>
+                    </div>
+                </div>
+                <div class="bus-fleet-item card">
+                    <div class="bus-icon-details">
+                        <img src="../assets/images/bus_icon_small.png" alt="Bus Icon">
+                        <div>
+                            <h3>GIT-002</h3>
+                            <p>Capacity: 40</p>
+                        </div>
+                    </div>
+                    <div class="bus-fleet-route-info">
+                        <p class="route-name">Central Bus Stand Route</p>
+                        <p class="route-stops-short">Central Bus Stand (CBT) &rarr; GIT</p>
+                    </div>
+                    <div class="bus-fleet-actions">
+                        <button class="btn secondary-btn"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn danger-btn"><i class="fas fa-trash-alt"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Bus Form (hidden by default) -->
+            <div id="bus-form-container" class="card form-container" style="display:none;">
+                <div class="form-header">
+                    <h3>Add New Bus</h3>
+                    <button class="close-btn" id="close-bus-form">&times;</button>
+                </div>
+                <form id="bus-form">
+                    <input type="hidden" id="bus-id">
+                    <div class="input-group">
+                        <label for="bus-number">Bus Number</label>
+                        <input type="text" id="bus-number" placeholder="e.g., GIT-003" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="route-name">Route Name</label>
+                        <input type="text" id="route-name" placeholder="e.g., Rajajinagar Route" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="starting-point">Starting Point</label>
+                        <input type="text" id="starting-point" placeholder="e.g., Rajajinagar" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="assigned-driver">Assigned Driver</label>
+                        <select id="assigned-driver" required>
+                            <option value="">Select Driver</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="departure-time">Departure Time</label>
+                        <input type="text" id="departure-time" placeholder="e.g., 8:00 AM" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="estimated-arrival">Estimated Arrival</label>
+                        <input type="text" id="estimated-arrival" placeholder="e.g., 8:45 AM" required>
+                    </div>
+                    <div class="input-group route-stops-group">
+                        <label>Route Stops</label>
+                        <div id="route-stops-container">
+                            <!-- Route stops will be dynamically added here -->
+                        </div>
+                        <button type="button" id="add-stop-btn" class="text-btn">Add Stop</button>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancel-bus-form" class="btn secondary-btn">Cancel</button>
+                        <button type="submit" class="btn primary-btn">Save Bus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+                <a href="#" class="visit-website-link"><img src="../assets/images/external_link_icon.png" alt="External Link Icon"> Visit Official Website</a>
+            </div>
+            <div class="footer-quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Bus Routes</a></li>
+                    <li><a href="#">Timings</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+            <div class="footer-follow-us">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><img src="../assets/images/instagram_icon.png" alt="Instagram"></a>
+                    <a href="#"><img src="../assets/images/linkedin_icon.png" alt="LinkedIn"></a>
+                    <a href="#"><img src="../assets/images/facebook_icon.png" alt="Facebook"></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="../assets/js/admin_buses.js"></script>
+</body>
+</html>
+

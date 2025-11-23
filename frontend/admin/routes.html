@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Routes</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="../assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="buses.html">Manage Buses</a></li>
+                    <li><a href="drivers.html">Manage Drivers</a></li>
+                    <li><a href="routes.html">Manage Routes</a></li>
+                    <li><a href="#" id="logout-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h2>Route List</h2>
+        <button id="add-route-btn" class="btn primary-btn">Add New Route</button>
+        <div id="route-management-list">
+            <!-- Route data will be loaded here -->
+        </div>
+
+        <!-- Add/Edit Route Form (hidden by default) -->
+        <div id="route-form-container" class="card form-container" style="display:none;">
+            <h3>Add/Edit Route</h3>
+            <form id="route-form">
+                <input type="hidden" id="route-id">
+                <div class="input-group">
+                    <label for="route-name">Route Name:</label>
+                    <input type="text" id="route-name" required>
+                </div>
+                <div class="input-group">
+                    <label for="route-stops">Stops (lat,lng; lat,lng...):</label>
+                    <input type="text" id="route-stops" placeholder="e.g., 18.5204,73.8567;18.5304,73.8667" required>
+                </div>
+                <button type="submit" class="btn primary-btn">Save Route</button>
+                <button type="button" id="cancel-route-form" class="btn secondary-btn">Cancel</button>
+            </form>
+        </div>
+    </main>
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+                <a href="#" class="visit-website-link"><img src="../assets/images/external_link_icon.png" alt="External Link Icon"> Visit Official Website</a>
+            </div>
+            <div class="footer-quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Bus Routes</a></li>
+                    <li><a href="#">Timings</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="../assets/js/admin_routes.js"></script>
+</body>
+</html>
+

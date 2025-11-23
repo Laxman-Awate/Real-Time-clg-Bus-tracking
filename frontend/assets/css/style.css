@@ -1,0 +1,2017 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --light-bg: #f8f9fa;
+    --dark-text: #343a40;
+    --white: #ffffff;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.main-header {
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    padding: 15px 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+}
+
+.kls-logo {
+    height: 50px; /* Adjust as needed */
+    margin-right: 15px;
+}
+
+.institute-name h2 {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--dark-text);
+}
+
+.institute-name p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--secondary-color);
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.main-nav ul li {
+    margin-left: 20px;
+}
+
+.main-nav ul li a {
+    color: var(--dark-text);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.main-nav ul li a:hover {
+    color: var(--primary-color);
+}
+
+.icon-link .nav-icon {
+    height: 24px; /* Adjust as needed for icons */
+    width: 24px;
+    vertical-align: middle;
+}
+
+.hero-section {
+    background-color: #e0f2f7; /* A light blue for the hero background */
+    text-align: center;
+    padding: 80px 20px;
+    border-radius: var(--border-radius);
+    margin-top: 20px;
+}
+
+.hero-section h1 {
+    font-size: 3em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.2em;
+    color: var(--dark-text);
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: 2px solid var(--primary-color);
+}
+
+.primary-btn:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.institute-info-section {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.institute-info-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: var(--dark-text);
+}
+
+.institute-info-section p {
+    max-width: 900px;
+    margin: 0 auto 40px auto;
+    font-size: 1.1em;
+    color: var(--dark-text);
+}
+
+.stats-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.stat-card-new {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 220px;
+    text-align: center;
+}
+
+.stat-card-new h3 {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    margin: 0 0 10px 0;
+}
+
+.stat-card-new p {
+    font-size: 1em;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.text-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.text-link:hover {
+    text-decoration: underline;
+}
+
+.institute-image {
+    position: relative;
+    margin-top: 50px;
+    display: inline-block; /* To center the image block */
+}
+
+.institute-image img {
+    max-width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.image-overlay-logos {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.image-overlay-logos img {
+    height: 40px; /* Smaller logos */
+    width: auto;
+    border-radius: 4px;
+}
+
+.features-section {
+    background-color: var(--light-bg);
+    padding: 60px 0;
+    text-align: center;
+}
+
+.features-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    color: var(--dark-text);
+}
+
+.feature-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.feature-icon {
+    height: 60px; /* Adjust icon size */
+    width: 60px;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: var(--dark-text);
+}
+
+.main-footer {
+    background-color: #0d121c; /* Dark background from the image */
+    color: var(--white);
+    padding: 40px 0 0;
+    margin-top: 60px;
+}
+
+.footer-content-new {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.footer-brand-info {
+    flex: 2;
+    min-width: 300px;
+}
+
+.footer-brand-info h2 {
+    font-size: 1.8em;
+    color: var(--white);
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.footer-brand-info p {
+    font-size: 0.95em;
+    color: #b0b8c2;
+    margin-bottom: 25px;
+}
+
+.visit-website-link {
+    color: #90caf9; /* A lighter blue for the link */
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s ease;
+}
+
+.visit-website-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.visit-website-link img {
+    height: 18px;
+    width: 18px;
+}
+
+.footer-quick-links {
+    flex: 1;
+    min-width: 150px;
+}
+
+.footer-quick-links h3 {
+    font-size: 1.4em;
+    color: var(--white);
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.footer-quick-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-quick-links ul li {
+    margin-bottom: 10px;
+}
+
+.footer-quick-links ul li a {
+    color: #b0b8c2;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-quick-links ul li a:hover {
+    color: var(--primary-color);
+}
+
+.footer-bottom-bar {
+    border-top: 1px solid #2d3748; /* A subtle line above the copyright */
+    padding: 20px 0;
+    text-align: center;
+    font-size: 0.9em;
+    color: #b0b8c2;
+    margin-top: 30px;
+}
+
+/* Login Page Specific Styles */
+.login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+    background-color: #e0f2f7; /* Light blue background */
+    padding: 20px;
+}
+
+.login-container {
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+}
+
+.login-header .login-page-logo {
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.login-header h2 {
+    font-size: 2em;
+    color: var(--dark-text);
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+}
+
+.login-form .input-group {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.login-form .input-group i {
+    color: var(--secondary-color);
+    margin-right: 10px;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    border: none;
+    flex-grow: 1;
+    padding: 5px 0;
+    font-size: 1em;
+    outline: none;
+}
+
+.login-form .show-password {
+    cursor: pointer;
+    color: var(--secondary-color);
+    margin-left: 10px;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    border: none;
+}
+
+.login-btn:hover {
+    opacity: 0.9;
+}
+
+.error-message {
+    color: red;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.demo-credentials {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.demo-credentials h3 {
+    font-size: 1.2em;
+    color: var(--dark-text);
+    margin-bottom: 15px;
+}
+
+.credential-card {
+    background-color: #f1f5f9;
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95em;
+}
+
+.admin-creds {
+    background-color: #fce4ec; /* Light pink */
+}
+
+.driver-creds {
+    background-color: #e8f5e9; /* Light green */
+}
+
+.student-creds {
+    background-color: #e3f2fd; /* Light blue */
+}
+
+.credential-card span {
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.back-to-home {
+    margin-top: 30px;
+}
+
+.back-to-home a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-to-home a:hover {
+    text-decoration: underline;
+}
+
+/* New Sections CSS */
+.cta-section-secondary {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); /* Gradient background */
+    color: var(--white);
+    text-align: center;
+    padding: 80px 20px;
+    border-radius: var(--border-radius);
+    margin-top: 40px;
+}
+
+.cta-section-secondary h2 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: var(--white);
+}
+
+.cta-section-secondary p {
+    font-size: 1.2em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.available-routes-section {
+    padding: 60px 0;
+    text-align: center;
+    background-color: var(--light-bg);
+}
+
+.available-routes-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: var(--dark-text);
+}
+
+.available-routes-section .section-description {
+    font-size: 1.1em;
+    color: var(--secondary-color);
+    margin-bottom: 40px;
+}
+
+.bus-route-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.bus-route-card {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.bus-icon-container {
+    background-color: #e0f2f7;
+    border-radius: 50%;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.bus-icon-container img {
+    height: 40px;
+    width: 40px;
+}
+
+.bus-route-details h3 {
+    font-size: 1.6em;
+    color: var(--dark-text);
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.bus-route-details .route-name {
+    color: var(--secondary-color);
+    font-size: 1em;
+    margin-bottom: 15px;
+}
+
+.timing-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+}
+
+.timing-info strong {
+    color: var(--primary-color);
+}
+
+.bus-route-details p {
+    font-size: 0.9em;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .main-nav ul {
+        margin-top: 15px;
+        justify-content: center;
+    }
+
+    .hero-section h1,
+    .cta-section-secondary h2 {
+        font-size: 2.5em;
+    }
+
+    .institute-info-section h2,
+    .features-section h2,
+    .available-routes-section h2 {
+        font-size: 2em;
+    }
+
+    .stats-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature-cards-grid,
+    .bus-route-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bus-route-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .timing-info {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .login-container {
+        padding: 20px;
+    }
+
+    .login-header h2 {
+        font-size: 1.8em;
+    }
+}
+
+/* Responsive adjustments for footer */
+@media (max-width: 768px) {
+    .footer-content-new {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .footer-brand-info, .footer-quick-links {
+        min-width: unset;
+        width: 100%;
+    }
+}
+
+/* New Student Dashboard Styles */
+.dashboard-main {
+    padding-top: 80px; /* Increased top padding to give more space from the header */
+    padding-bottom: 40px;
+    background-color: var(--light-bg);
+}
+
+.dashboard-title {
+    font-size: 2.8em;
+    color: var(--dark-text);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.dashboard-subtitle {
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+    align-items: stretch; /* Ensure all grid items stretch to fill available height */
+}
+
+.card {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+}
+
+/* Student Info Card */
+.student-info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+}
+
+.student-info-card .card-icon-circle {
+    background-color: #f3e5f5; /* Light purple */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.student-info-card .card-icon-circle img {
+    height: 40px;
+    width: 40px;
+}
+
+.student-info-card .student-details h3 {
+    font-size: 1.8em;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.student-info-card .student-details p {
+    color: var(--secondary-color);
+    margin: 5px 0;
+    font-size: 0.95em;
+}
+
+.student-info-card .current-time {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    width: 100%;
+}
+
+.student-info-card .current-time p {
+    margin: 0 0 5px 0;
+    font-size: 0.9em;
+    color: var(--secondary-color);
+}
+
+.student-info-card .current-time h4 {
+    font-size: 1.6em;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+/* Bus Status Card */
+.bus-status-card {
+    text-align: left;
+    min-height: 250px; /* Ensure a consistent height for stability */
+    max-height: 300px; /* Prevent excessive growth */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bus-status-card .card-header-bus {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Bus title icon takes available space, status takes its content width */
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.bus-status-card .bus-title-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bus-status-card .bus-title-icon img {
+    height: 30px;
+    width: 30px;
+}
+
+.bus-status-card .card-header-bus h3 {
+    font-size: 1.8em;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.bus-status-card .status-inactive {
+    background-color: #ffcdd2; /* Light red */
+    color: #c62828; /* Dark red */
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.bus-status-card .status-active {
+    background-color: #c8e6c9; /* Light green */
+    color: #2e7d32; /* Dark green */
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.bus-status-card .bus-route-name {
+    color: var(--secondary-color);
+    font-size: 1.1em;
+    margin-bottom: 25px;
+}
+
+.bus-status-card .bus-timing-details .timing-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.bus-status-card .bus-timing-details .timing-item i {
+    font-size: 1.2em;
+    color: var(--primary-color);
+    width: 25px;
+    text-align: center;
+}
+
+.bus-status-card .bus-timing-details .timing-item span {
+    flex-grow: 1;
+    color: var(--dark-text);
+}
+
+.bus-status-card .bus-timing-details .timing-item strong {
+    color: var(--dark-text);
+    font-weight: 600;
+}
+
+.bus-status-card .bus-active-message {
+    background-color: #f1f5f9; /* Light grey */
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: var(--secondary-color);
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Driver Information Card */
+.driver-info-card h3 {
+    font-size: 1.4em;
+    color: var(--dark-text);
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.driver-info-card .driver-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.driver-info-card .driver-detail-item img {
+    height: 24px;
+    width: 24px;
+}
+
+.driver-info-card .driver-detail-item span {
+    flex-grow: 1;
+    color: var(--dark-text);
+}
+
+.driver-info-card .driver-detail-item strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Route Stops Card */
+.route-stops-card h3 {
+    font-size: 1.4em;
+    color: var(--dark-text);
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.route-stops-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.route-stops-card ul li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 1em;
+    color: var(--dark-text);
+}
+
+.route-stops-card ul li img {
+    height: 20px;
+    width: 20px;
+    flex-shrink: 0;
+}
+
+.route-stops-card ul li.start-point {
+    color: #4CAF50; /* Green for starting point */
+    font-weight: 600;
+}
+
+.route-stops-card ul li.destination-point {
+    color: #F44336; /* Red for destination */
+    font-weight: 600;
+}
+
+.route-stops-card ul li .label {
+    font-size: 0.8em;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background-color: #eee;
+    color: var(--secondary-color);
+}
+
+.route-stops-card ul li.start-point .label {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.route-stops-card ul li.destination-point .label {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Live Tracking Map Section */
+.live-tracking-map-section {
+    padding: 40px 0;
+    text-align: center;
+}
+
+.live-tracking-map-section h2 {
+    font-size: 2.5em;
+    color: var(--dark-text);
+    margin-bottom: 30px;
+}
+
+.map-container {
+    height: 500px; /* Adjust height as needed */
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+/* Media Queries for Dashboard */
+@media (max-width: 768px) {
+    .dashboard-title {
+        font-size: 2.2em;
+    }
+
+    .dashboard-subtitle {
+        font-size: 1em;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .map-container {
+        height: 300px;
+    }
+}
+
+/* Driver Dashboard Specific Styles */
+.dashboard-grid-driver {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+    align-items: stretch;
+}
+
+.driver-bus-info-card {
+    text-align: left;
+    position: relative;
+    padding-top: 60px;
+}
+
+/* Card header with bus icon */
+.card-header-bus {
+    position: absolute;
+    top: -25px;
+    left: 20px;
+    right: 20px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+}
+
+.bus-title-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bus-title-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.bus-title-icon h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--dark-text);
+}
+
+.status-inactive {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.driver-bus-info-card .bus-timing-details-driver {
+    margin: 20px 0;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.driver-bus-info-card .bus-timing-details-driver .timing-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.driver-bus-info-card .bus-timing-details-driver .timing-item i {
+    font-size: 1.2em;
+    color: var(--primary-color);
+    width: 25px;
+    text-align: center;
+}
+
+.driver-bus-info-card .bus-timing-details-driver .timing-item span {
+    flex-grow: 1;
+    color: var(--dark-text);
+}
+
+.driver-bus-info-card .bus-timing-details-driver .timing-item strong {
+    color: var(--dark-text);
+    font-weight: 600;
+}
+
+.driver-bus-info-card .btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.driver-bus-info-card .btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.driver-bus-info-card .btn:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.driver-route-info-card h3 {
+    font-size: 1.3em;
+    color: var(--dark-text);
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.driver-route-info-card .route-detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.driver-route-info-card .route-detail-item span {
+    color: var(--secondary-color);
+}
+
+.driver-route-info-card .route-detail-item strong {
+    color: var(--dark-text);
+    font-weight: 600;
+}
+
+.driver-route-info-card .route-stops-heading {
+    font-size: 1.2em;
+    color: var(--dark-text);
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.driver-route-info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.driver-route-info-card ul li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+    color: var(--dark-text);
+}
+
+.driver-route-info-card ul li img {
+    height: 16px;
+    width: 16px;
+    flex-shrink: 0;
+}
+
+.driver-route-info-card ul li.start-point {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+.driver-route-info-card ul li.destination-point {
+    color: #F44336;
+    font-weight: 600;
+}
+
+.quick-actions-card h3 {
+    font-size: 1.4em;
+    color: var(--dark-text);
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.action-item:hover {
+    background-color: #f1f3f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.action-item img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.action-item div h4 {
+    margin: 0 0 4px 0;
+    font-size: 1em;
+    color: var(--dark-text);
+}
+
+.action-item div p {
+    margin: 0;
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+.action-item:hover {
+    background-color: #e9ecef;
+}
+
+.action-item img {
+    height: 40px;
+    width: 40px;
+    flex-shrink: 0;
+}
+
+.action-item h4 {
+    font-size: 1.2em;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.action-item p {
+    font-size: 0.85em;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+/* Media Queries for Driver Dashboard */
+@media (max-width: 768px) {
+    .dashboard-grid-driver {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Admin Dashboard Specific Styles */
+.admin-stat-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.admin-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--white);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.admin-card-icon-circle {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.admin-card-icon-circle img {
+    height: 30px;
+    width: 30px;
+}
+
+/* Specific background colors for admin stat cards */
+.admin-stat-card:nth-child(1) .admin-card-icon-circle { /* Total Buses */
+    background-color: #f3e5f5; /* Light purple */
+}
+
+.admin-stat-card:nth-child(2) .admin-card-icon-circle { /* Available Drivers */
+    background-color: #e8f5e9; /* Light green */
+}
+
+.admin-stat-card:nth-child(3) .admin-card-icon-circle { /* Active Routes */
+    background-color: #e3f2fd; /* Light blue */
+}
+
+.admin-card-info p {
+    margin: 0;
+    font-size: 0.95em;
+    color: var(--secondary-color);
+}
+
+.admin-card-info h3 {
+    margin: 5px 0 0;
+    font-size: 1.8em;
+    color: var(--dark-text);
+}
+
+.bus-fleet-section {
+    margin-top: 50px;
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.bus-fleet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Admin Buses Section */
+.dashboard-title {
+    font-size: 2.2em;
+    color: var(--dark-text);
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.dashboard-subtitle {
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.add-new-btn {
+    margin-bottom: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.add-new-btn i {
+    font-size: 1.1em;
+}
+
+.bus-fleet-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.bus-fleet-item {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+}
+
+.bus-fleet-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.bus-icon-details {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.bus-icon-details img {
+    width: 48px;
+    height: 48px;
+    margin-right: 15px;
+    object-fit: contain;
+}
+
+.bus-icon-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.4em;
+    color: var(--dark-text);
+}
+
+.bus-icon-details p {
+    margin: 0;
+    color: var(--secondary-color);
+    font-size: 0.95em;
+}
+
+.bus-fleet-route-info {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    flex-grow: 1;
+}
+
+.route-name {
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--dark-text);
+    font-size: 1.1em;
+}
+
+.route-stops-short {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bus-fleet-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.bus-fleet-actions .btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 15px;
+    font-size: 0.9em;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.bus-fleet-actions .btn i {
+    font-size: 1em;
+}
+
+/* Form Container Styling */
+.form-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0;
+    overflow: hidden;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.form-header h3 {
+    margin: 0;
+    font-size: 1.4em;
+    color: var(--dark-text);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 5px 10px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background: #f1f3f5;
+    color: #495057;
+}
+
+#bus-form {
+    padding: 25px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    outline: none;
+}
+
+.route-stops-group {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#route-stops-container {
+    margin: 15px 0;
+}
+
+.stop-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.stop-item input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.remove-stop {
+    color: #dc3545;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.remove-stop:hover {
+    background-color: #f1f3f5;
+}
+
+#add-stop-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0;
+    font-size: 0.95em;
+}
+
+#add-stop-btn:hover {
+    text-decoration: underline;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e9ecef;
+    margin-top: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .bus-fleet-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .bus-fleet-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+.bus-fleet-header .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.bus-fleet-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Responsive multiple columns */
+    gap: 20px; /* Increased gap for better spacing */
+}
+
+.bus-fleet-row {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr; /* Adjusted for icon, route, and actions */
+    align-items: center;
+    background-color: var(--white); /* Use white for card background */
+    padding: 20px; /* Adjusted padding */
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow); /* Apply standard card shadow */
+}
+
+.bus-fleet-item.bus-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.bus-fleet-item.bus-details img {
+    height: 24px;
+    width: 24px;
+}
+
+/* Specific styling for icons in bus details within admin sections */
+.bus-icon-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bus-icon-details img {
+    height: 20px;
+    width: 20px;
+    object-fit: contain; /* Ensures the image scales down without cropping */
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+}
+
+.bus-fleet-item.bus-details h4 {
+    font-size: 1.2em;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.bus-fleet-item.bus-details p {
+    font-size: 0.9em;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.bus-fleet-route-info {
+    text-align: left;
+}
+
+.bus-fleet-route-info .route-name {
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 5px;
+}
+
+.bus-fleet-route-info .route-stops-short {
+    font-size: 0.9em;
+    color: var(--secondary-color);
+}
+
+.bus-fleet-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+.bus-fleet-actions .btn {
+    padding: 8px 15px;
+    font-size: 0.9em;
+    border-radius: 5px;
+}
+
+/* Footer Social Icons */
+.footer-social-icons {
+    flex: 1;
+    min-width: 150px;
+    text-align: center; /* Center for mobile */
+}
+
+.footer-social-icons h3 {
+    font-size: 1.4em;
+    color: var(--white);
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.footer-social-icons ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer-social-icons ul li a img {
+    height: 16px;
+    width: 16px;
+    transition: transform 0.3s ease;
+}
+
+.footer-social-icons ul li a img:hover {
+    transform: translateY(-3px);
+}
+
+/* Media Queries for Admin Dashboard */
+@media (max-width: 768px) {
+    .admin-stat-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bus-fleet-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .bus-fleet-header .btn {
+        width: 100%;
+    }
+
+    .bus-fleet-row {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .bus-fleet-item.bus-details {
+        justify-content: center;
+    }
+
+    .bus-fleet-item.bus-route {
+        text-align: center;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .footer-social-icons {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .footer-social-icons ul {
+        justify-content: center;
+    }
+}
+
+/* Specific styling for social icons in footers that use .social-icons class */
+.footer-follow-us .social-icons img {
+    height: 20px;
+    width: 20px;
+    transition: transform 0.3s ease;
+}
+
+.footer-follow-us .social-icons img:hover {
+    transform: translateY(-3px);
+}
+
+/* Form Container and Input Group General Styles */
+.form-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.form-header h3 {
+    font-size: 1.8em;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    color: var(--secondary-color);
+    cursor: pointer;
+    padding: 0;
+}
+
+.close-btn:hover {
+    color: var(--dark-text);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--dark-text);
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"],
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--dark-text);
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Route Stops Specific Styles */
+.route-stops-group label {
+    margin-bottom: 15px;
+}
+
+#route-stops-container {
+    margin-bottom: 15px;
+}
+
+.route-stop-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.route-stop-item input {
+    flex-grow: 1;
+}
+
+.remove-stop-btn {
+    background-color: #dc3545;
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.remove-stop-btn:hover {
+    background-color: #c82333;
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 600;
+    padding: 5px 10px;
+    transition: color 0.3s ease;
+}
+
+.text-btn:hover {
+    color: #0056b3;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.form-actions .btn {
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.secondary-btn {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border: 2px solid var(--secondary-color);
+}
+
+.secondary-btn:hover {
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+
+.danger-btn {
+    background-color: #dc3545;
+    color: var(--white);
+    border: 2px solid #dc3545;
+}
+
+.danger-btn:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+/* Hover Effects for Buttons and Cards */
+.btn, .login-btn, .remove-stop-btn, .text-btn, .primary-btn, .secondary-btn, .danger-btn {
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+}
+
+.btn:hover, .login-btn:hover, .remove-stop-btn:hover, .text-btn:hover, .primary-btn:hover, .secondary-btn:hover, .danger-btn:hover {
+    transform: scale(1.08);
+}
+
+.stat-card-new, .feature-card, .bus-route-card, .card, .admin-stat-card, .action-item, .credential-card {
+    transition: all 0.3s ease; /* Retain transition for smooth changes if we re-add hover */
+    position: relative; /* Establish new stacking context */
+    z-index: 1; /* Ensure it's above other normal flow content if needed */
+}
+
+.stat-card-new:hover, .feature-card:hover, .bus-route-card:hover, .card:hover, .admin-stat-card:hover, .action-item:hover, .credential-card:hover {
+    transform: translateY(-5px); /* Re-introduce lift effect */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* More prominent shadow on hover */
+}
+
+/* Admin Drivers Section */
+.driver-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.driver-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+}
+
+.driver-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.driver-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.driver-details i {
+    font-size: 2.2em; /* Larger icon */
+    color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.driver-details-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.4em;
+    color: var(--dark-text);
+}
+
+.driver-details-info p {
+    margin: 0;
+    color: var(--secondary-color);
+    font-size: 0.95em;
+}
+
+.driver-contact-info {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    flex-grow: 1;
+}
+
+.driver-contact-info p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: var(--dark-text);
+}
+
+.driver-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.driver-actions .btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 15px;
+    font-size: 0.9em;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.driver-actions .btn i {
+    font-size: 1em;
+}
+
+@media (max-width: 768px) {
+    .driver-list-grid {
+        grid-template-columns: 1fr;
+    }
+    .driver-actions {
+        flex-direction: column;
+    }
+}

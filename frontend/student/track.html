@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Bus</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- Google Maps API or Mapbox GL JS -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="../assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="#" id="logout-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div id="map" style="height: 500px; width: 100%;"></div>
+        <div id="bus-details">
+            <h3>Bus Information</h3>
+            <p><strong>Bus Name:</strong> <span id="bus-name"></span></p>
+            <p><strong>Route:</strong> <span id="route-name"></span></p>
+            <p><strong>Driver:</strong> <span id="driver-name"></span></p>
+            <p><strong>Speed:</strong> <span id="bus-speed"></span> km/h</p>
+            <p><strong>Estimated Arrival:</strong> <span id="eta"></span></p>
+        </div>
+    </main>
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+                <a href="#" class="visit-website-link"><img src="../assets/images/external_link_icon.png" alt="External Link Icon"> Visit Official Website</a>
+            </div>
+            <div class="footer-quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Bus Routes</a></li>
+                    <li><a href="#">Timings</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="../assets/js/track_bus.js"></script>
+</body>
+</html>
+

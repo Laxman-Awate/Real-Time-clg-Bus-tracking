@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="../assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="buses.html">Manage Buses</a></li>
+                    <li><a href="drivers.html">Manage Drivers</a></li>
+                    <li><a href="routes.html">Manage Routes</a></li>
+                    <li><a href="#" id="logout-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="dashboard-main">
+        <div class="container">
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+            <p class="dashboard-subtitle">Manage buses, routes, and drivers</p>
+
+            <div class="admin-stat-cards-grid">
+                <div class="card admin-stat-card">
+                    <div class="admin-card-icon-circle">
+                        <img src="../assets/images/bus_icon_purple_bg.png" alt="Total Buses Icon">
+                    </div>
+                    <div class="admin-card-info">
+                        <p>Total Buses</p>
+                        <h3 id="total-buses">4</h3>
+                    </div>
+                </div>
+                <div class="card admin-stat-card">
+                    <div class="admin-card-icon-circle">
+                        <img src="../assets/images/users_icon_green_bg.png" alt="Available Drivers Icon">
+                    </div>
+                    <div class="admin-card-info">
+                        <p>Available Drivers</p>
+                        <h3 id="total-drivers">4</h3>
+                    </div>
+                </div>
+                <div class="card admin-stat-card">
+                    <div class="admin-card-icon-circle">
+                        <img src="../assets/images/routes_icon_blue_bg.png" alt="Active Routes Icon">
+                    </div>
+                    <div class="admin-card-info">
+                        <p>Active Routes</p>
+                        <h3 id="total-routes">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <section class="bus-fleet-section">
+                <div class="bus-fleet-header">
+                    <h2>Bus Fleet</h2>
+                    <button id="add-new-bus-btn" class="btn primary-btn">+ Add New Bus</button>
+                </div>
+                <div class="bus-fleet-table" id="bus-fleet-list">
+                    <!-- Bus fleet items will be loaded here by JavaScript -->
+                    <div class="bus-fleet-row">
+                        <div class="bus-fleet-item bus-details">
+                            <img src="../assets/images/bus_icon_small.png" alt="Bus Icon">
+                            <div>
+                                <h4>GIT-001</h4>
+                                <p>Capacity: 40</p>
+                            </div>
+                        </div>
+                        <div class="bus-fleet-item bus-route">
+                            <p>Mahantesh Nagar Route</p>
+                            <p>Mahantesh Nagar &rarr; GIT</p>
+                        </div>
+                    </div>
+                    <div class="bus-fleet-row">
+                        <div class="bus-fleet-item bus-details">
+                            <img src="../assets/images/bus_icon_small.png" alt="Bus Icon">
+                            <div>
+                                <h4>GIT-002</h4>
+                                <p>Capacity: 40</p>
+                            </div>
+                        </div>
+                        <div class="bus-fleet-item bus-route">
+                            <p>Central Bus Stand Route</p>
+                            <p>Central Bus Stand (CBT) &rarr; GIT</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+                <a href="#" class="visit-website-link"><img src="../assets/images/external_link_icon.png" alt="External Link Icon"> Visit Official Website</a>
+            </div>
+            <div class="footer-quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Bus Routes</a></li>
+                    <li><a href="#">Timings</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+            <div class="footer-social-icons">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li><a href="#"><img src="../assets/images/instagram_icon.png" alt="Instagram"></a></li>
+                    <li><a href="#"><img src="../assets/images/linkedin_icon.png" alt="LinkedIn"></a></li>
+                    <li><a href="#"><img src="../assets/images/facebook_icon.png" alt="Facebook"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="../assets/js/admin_dashboard.js"></script>
+</body>
+</html>
+

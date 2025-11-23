@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration - KLS GIT Bus Tracking</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .role-selection {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .role-option {
+            display: inline-block;
+            margin: 0 10px;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .role-option:hover {
+            border-color: #4CAF50;
+        }
+        .role-option.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="login.html" class="btn primary-btn">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="login-main">
+        <div class="login-container">
+            <div class="login-header">
+                <img src="assets/images/kls_logo.png" alt="KLS Logo" class="login-page-logo">
+                <h2>Register as a Student</h2>
+                <p>Create your account to track your bus in real-time.</p>
+            </div>
+            <form id="student-register-form" class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-user-tag"></i>
+                    <select id="role-select" required>
+                        <option value="">Select Role</option>
+                        <option value="student">Student</option>
+                        <option value="driver">Driver</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div id="student-fields">
+                    <div class="input-group">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="student-id" placeholder="Student ID">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="student-name" placeholder="Full Name">
+                    </div>
+                </div>
+
+                <div id="driver-fields" style="display:none;">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="driver-username" placeholder="Username">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="driver-name" placeholder="Full Name">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="text" id="driver-phone" placeholder="Phone Number">
+                    </div>
+                </div>
+
+                <div id="admin-fields" style="display:none;">
+                    <div class="input-group">
+                        <i class="fas fa-user-shield"></i>
+                        <input type="text" id="admin-username" placeholder="Admin Username">
+                    </div>
+                </div>
+
+                <div class="input-group password-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <i class="fas fa-eye show-password"></i>
+                </div>
+                <div class="input-group password-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+                    <i class="fas fa-eye show-password"></i>
+                </div>
+                <button type="submit" class="btn primary-btn login-btn">Register</button>
+                <div id="error-message" class="error-message" style="display:none;"></div>
+            </form>
+            <div class="back-to-home">
+                <p>Already have an account? <a href="login.html">Sign In</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+            </div>
+            <div class="footer-bottom-bar">
+                <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/register.js"></script>
+    <script>
+        // Dynamic form fields based on role selection
+        const roleSelect = document.getElementById('role-select');
+        const studentFields = document.getElementById('student-fields');
+        const driverFields = document.getElementById('driver-fields');
+        const adminFields = document.getElementById('admin-fields');
+        const passwordFields = document.querySelectorAll('.password-field');
+
+        const toggleFields = () => {
+            studentFields.style.display = 'none';
+            driverFields.style.display = 'none';
+            adminFields.style.display = 'none';
+
+            // Make all password fields required by default
+            passwordFields.forEach(fieldGroup => {
+                fieldGroup.querySelector('input[type="password"]').required = true;
+            });
+
+            const selectedRole = roleSelect.value;
+            if (selectedRole === 'student') {
+                studentFields.style.display = 'block';
+                studentFields.querySelectorAll('input').forEach(input => input.required = true);
+            } else if (selectedRole === 'driver') {
+                driverFields.style.display = 'block';
+                driverFields.querySelectorAll('input').forEach(input => input.required = true);
+            } else if (selectedRole === 'admin') {
+                adminFields.style.display = 'block';
+                adminFields.querySelectorAll('input').forEach(input => input.required = true);
+            }
+        };
+
+        roleSelect.addEventListener('change', toggleFields);
+        toggleFields(); // Initial call to set correct fields on load
+
+        // Toggle password visibility
+        document.querySelectorAll('.show-password').forEach(togglePassword => {
+            togglePassword.addEventListener('click', function () {
+                const passwordInput = this.previousElementSibling;
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
+</body>
+</html>

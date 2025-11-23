@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        /* Default bus marker style */
+        .bus-marker {
+            width: 30px;
+            height: 30px;
+            background-color: #ff6600;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .bus-marker::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            top: 4px;
+            left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="../assets/images/kls_logo.png" alt="KLS Logo" class="kls-logo">
+                <div class="institute-name">
+                    <h2>KLS Gogte Institute of Technology</h2>
+                    <p>Real-Time Bus Tracking System</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="#" id="logout-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="container">
+            <h1 class="dashboard-title">Student Dashboard</h1>
+            <p class="dashboard-subtitle">Track your bus in real-time</p>
+
+            <div class="dashboard-grid">
+                <!-- Student Information Card -->
+                <div class="card student-info-card">
+                    <div class="card-icon-circle">
+                        <img src="../assets/images/user_icon_purple.png" alt="User Icon">
+                    </div>
+                    <div class="student-details">
+                        <h3 id="student-name">Priya Sharma</h3>
+                        <p id="student-email">student1@git.edu</p>
+                        <p id="student-phone">9876543213</p>
+                    </div>
+                    <div class="current-time">
+                        <p>Current Time</p>
+                        <h4 id="current-time">04:37 PM</h4>
+                    </div>
+                </div>
+
+                <!-- Bus Status Card -->
+                <div class="card bus-status-card">
+                    <div class="card-header-bus">
+                        <div class="bus-title-icon">
+                            <img src="../assets/images/bus_icon_small.png" alt="Bus Icon">
+                            <h3 id="bus-code">GIT-001</h3>
+                        </div>
+                        <span id="bus-status" class="status-inactive">Inactive</span>
+                    </div>
+                    <p class="bus-route-name" id="bus-route-name">Mahantesh Nagar Route</p>
+                    
+                    <div class="bus-timing-details">
+                        <div class="timing-item">
+                            <i class="far fa-clock"></i>
+                            <span>Departure</span>
+                            <strong id="bus-departure-time">8:00 AM</strong>
+                        </div>
+                        <div class="timing-item">
+                            <i class="fas fa-route"></i>
+                            <span>ETA to College</span>
+                            <strong id="bus-eta-college">8:45 AM</strong>
+                        </div>
+                        <div class="timing-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Current Time</span>
+                            <strong id="bus-current-time">04:37 PM</strong>
+                        </div>
+                    </div>
+                    <p class="bus-active-message" id="bus-active-message">Bus is not currently active</p>
+                </div>
+
+                <!-- Driver Information Card -->
+                <div class="card driver-info-card">
+                    <h3>Driver Information</h3>
+                    <div class="driver-detail-item">
+                        <img src="../assets/images/driver_icon.png" alt="Driver Icon">
+                        <span>Driver Name</span>
+                        <strong id="driver-name">Rajesh Kumar</strong>
+                    </div>
+                    <div class="driver-detail-item">
+                        <img src="../assets/images/capacity_icon.png" alt="Capacity Icon">
+                        <span>Bus Capacity</span>
+                        <strong id="bus-capacity">40 passengers</strong>
+                    </div>
+                </div>
+
+                <!-- Route Stops Card -->
+                <div class="card route-stops-card">
+                    <h3>Route Stops</h3>
+                    <ul id="route-stops-list">
+                        <!-- Stops will be populated by JS -->
+                        <li class="start-point"><img src="../assets/images/map_pin_green.png" alt="Start Icon"> Mahantesh Nagar <span class="label">Starting Point</span></li>
+                        <li><img src="../assets/images/map_pin_blue.png" alt="Stop Icon"> Tilakwadi</li>
+                        <li><img src="../assets/images/map_pin_blue.png" alt="Stop Icon"> RPD Cross</li>
+                        <li><img src="../assets/images/map_pin_blue.png" alt="Stop Icon"> Udyambag</li>
+                        <li class="destination-point"><img src="../assets/images/map_pin_red.png" alt="Destination Icon"> KLS Gogte Institute of Technology <span class="label">Destination</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Live Bus Tracking Map -->
+            <section class="live-tracking-map-section">
+                <h2>Live Bus Tracking</h2>
+                <div id="dashboard-map" class="map-container"></div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content-new">
+            <div class="footer-brand-info">
+                <h2>KLS Gogte Institute of Technology</h2>
+                <p>Real-Time Bus Tracking System for efficient campus transportation management.</p>
+                <a href="#" class="visit-website-link"><img src="../assets/images/external_link_icon.png" alt="External Link Icon"> Visit Official Website</a>
+            </div>
+            <div class="footer-quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Bus Routes</a></li>
+                    <li><a href="#">Timings</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <p>&copy; 2023 KLS Gogte Institute of Technology. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/student_dashboard.js"></script>
+</body>
+</html>
+
