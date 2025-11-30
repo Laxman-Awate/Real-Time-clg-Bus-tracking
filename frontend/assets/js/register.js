@@ -1,85 +1,111 @@
-// register.js
-const API_BASE_URL = 'http://localhost:8001';
+import { auth, db } from "./firebase-init.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// register.js
 document.addEventListener('DOMContentLoaded', () => {
-    const registerForm = document.getElementById('student-register-form'); // Corrected ID
+    const registerForm = document.getElementById('student-register-form');
     const errorMessage = document.getElementById('error-message');
-    const roleSelect = document.getElementById('role-select'); // Corrected ID
+    const roleSelect = document.getElementById('role-select');
 
     // Student fields
     const studentIdInput = document.getElementById('student-id');
     const studentNameInput = document.getElementById('student-name');
+    // Add student email input field
+    const studentEmailInput = document.createElement('input');
+    studentEmailInput.type = 'email';
+    studentEmailInput.id = 'student-email';
+    studentEmailInput.placeholder = 'Student Email';
+    studentEmailInput.required = true;
+    studentEmailInput.className = 'input-group__input'; // Add a class for styling if needed
 
     // Driver fields
-    const driverUsernameInput = document.getElementById('driver-username');
+    const driverUsernameInput = document.getElementById('driver-username'); // This will be the email
     const driverNameInput = document.getElementById('driver-name');
     const driverPhoneInput = document.getElementById('driver-phone');
 
     // Admin fields
-    const adminUsernameInput = document.getElementById('admin-username');
+    const adminUsernameInput = document.getElementById('admin-username'); // This will be the email
 
     // Common fields
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
 
+    // Append student email field to student-fields div
+    const studentFieldsDiv = document.getElementById('student-fields');
+    const studentEmailGroup = document.createElement('div');
+    studentEmailGroup.className = 'input-group';
+    studentEmailGroup.innerHTML = '<i class="fas fa-envelope"></i>';
+    studentEmailGroup.appendChild(studentEmailInput);
+    studentFieldsDiv.appendChild(studentEmailGroup);
+
     if (registerForm) {
         registerForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            // Reset error message
             errorMessage.style.display = 'none';
             errorMessage.textContent = '';
 
             const selectedRole = roleSelect.value;
             const password = passwordInput.value.trim();
             const confirmPassword = confirmPasswordInput.value.trim();
+            let email = '';
+            let userData = {};
 
-            // Basic password validation
             if (password !== confirmPassword) {
                 errorMessage.textContent = 'Passwords do not match.';
                 errorMessage.style.display = 'block';
                 return;
             }
 
-            if (password.length < 8) {
-                errorMessage.textContent = 'Password must be at least 8 characters long.';
+            if (password.length < 6) { // Firebase requires at least 6 characters for password
+                errorMessage.textContent = 'Password must be at least 6 characters long.';
                 errorMessage.style.display = 'block';
                 return;
             }
-            
-            let requestData = { password };
-            let endpoint = '';
 
             switch (selectedRole) {
                 case 'student':
-                    requestData.student_id = studentIdInput.value.trim();
-                    requestData.name = studentNameInput.value.trim();
-                    if (!requestData.student_id || !requestData.name) {
-                        errorMessage.textContent = 'Student ID and Name are required.';
+                    email = studentEmailInput.value.trim();
+                    userData = {
+                        student_id: studentIdInput.value.trim(),
+                        name: studentNameInput.value.trim(),
+                        role: 'student',
+                        isAdmin: false
+                    };
+                    if (!email || !userData.student_id || !userData.name) {
+                        errorMessage.textContent = 'Email, Student ID, and Name are required.';
                         errorMessage.style.display = 'block';
                         return;
                     }
-                    endpoint = '/auth/register/student';
                     break;
                 case 'driver':
-                    requestData.username = driverUsernameInput.value.trim();
-                    requestData.name = driverNameInput.value.trim();
-                    requestData.phone = driverPhoneInput.value.trim();
-                    if (!requestData.username || !requestData.name || !requestData.phone) {
-                        errorMessage.textContent = 'Username, Name, and Phone are required for drivers.';
+                    email = driverUsernameInput.value.trim();
+                    userData = {
+                        username: email,
+                        name: driverNameInput.value.trim(),
+                        phone: driverPhoneInput.value.trim(),
+                        role: 'driver',
+                        isAdmin: false
+                    };
+                    if (!email || !userData.name || !userData.phone) {
+                        errorMessage.textContent = 'Email, Name, and Phone are required for drivers.';
                         errorMessage.style.display = 'block';
                         return;
                     }
-                    endpoint = '/auth/register/driver';
                     break;
                 case 'admin':
-                    requestData.username = adminUsernameInput.value.trim();
-                    if (!requestData.username) {
-                        errorMessage.textContent = 'Admin Username is required.';
+                    email = adminUsernameInput.value.trim();
+                    userData = {
+                        username: email,
+                        role: 'admin',
+                        isAdmin: true
+                    };
+                    if (!email) {
+                        errorMessage.textContent = 'Admin Email is required.';
                         errorMessage.style.display = 'block';
                         return;
                     }
-                    endpoint = '/auth/register/admin';
                     break;
                 default:
                     errorMessage.textContent = 'Please select a role.';
@@ -88,26 +114,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(requestData),
-                });
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.detail || 'Registration failed. Please try again.');
-                }
+                // Store user details in Firestore
+                await setDoc(doc(db, "users", user.uid), userData);
 
                 alert(`Registration successful! You can now log in as a ${selectedRole}.`);
                 window.location.href = 'login.html';
 
             } catch (error) {
-                console.error('Registration error:', error);
-                errorMessage.textContent = error.message;
+                console.error('Firebase Registration error:', error);
+                let message = 'Registration failed. Please try again.';
+                if (error.code === 'auth/email-already-in-use') {
+                    message = 'The email address is already in use by another account.';
+                } else if (error.code === 'auth/invalid-email') {
+                    message = 'The email address is not valid.';
+                } else if (error.code === 'auth/weak-password') {
+                    message = 'The password is too weak. Please use at least 6 characters.';
+                }
+                errorMessage.textContent = message;
                 errorMessage.style.display = 'block';
             }
         });

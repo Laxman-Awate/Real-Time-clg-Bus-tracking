@@ -1,5 +1,28 @@
+import { auth, db } from "./firebase-init.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { collection, query, onSnapshot, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 // student_dashboard.js
-// import busSchedule from '../data/busSchedule.js'; // This import needs to be handled differently if it's still required
+
+// Function to show toast messages
+function showToast(message, type = 'success') {
+    const toastContainer = document.getElementById('toast-container') || (() => {
+        const div = document.createElement('div');
+        div.id = 'toast-container';
+        document.body.appendChild(div);
+        return div;
+    })();
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const studentNameSpan = document.getElementById('student-name');
@@ -21,23 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const routeStopsList = document.getElementById('route-stops-list');
     const dashboardMapDiv = document.getElementById('dashboard-map');
 
-    const API_BASE_URL = 'http://localhost:8001';
-    let map; // Declared here for local scope
-    let busMarker; // Declared here for local scope
+    let map; 
+    let busMarker; 
     let polyline;
-    let currentBusId = 1; // Assuming a student is assigned to bus ID 1 for now
-
-    const getAuthHeaders = () => {
-        const token = localStorage.getItem('access_token');
-        if (!token) {
-            window.location.href = '../login.html';
-            throw new Error('No access token found.');
-        }
-        return {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        };
-    };
+    let assignedBusId = null; // Will store the bus ID assigned to the student
 
     const updateCurrentTime = () => {
         const now = new Date();
@@ -55,10 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Clear any existing map instance only if it's already initialized on the global window object
-        if (window.map) {
-            window.map.remove();
-            window.map = null;
+        // Clear any existing map instance
+        if (map) {
+            map.remove();
+            map = null;
         }
 
         // Set container styles (ensure it has dimensions before initializing map)
@@ -68,9 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mapElement.style.minHeight = '300px';
 
         // Initialize the map with a slight delay to ensure container is rendered
-        // This timeout is crucial for Leaflet to correctly calculate map container dimensions
         setTimeout(() => {
-            // Create a simple div icon for the bus marker
             const busIcon = L.divIcon({
                 className: 'bus-marker',
                 iconSize: [30, 30],
@@ -78,364 +86,377 @@ document.addEventListener('DOMContentLoaded', () => {
                 popupAnchor: [0, -15]
             });
 
-            // Initialize the map
-            window.map = L.map('dashboard-map', {
+            map = L.map('dashboard-map', {
                 center: [initialLat, initialLng],
                 zoom: 15,
                 zoomControl: true,
                 scrollWheelZoom: true
             });
 
-            // Add OpenStreetMap tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 maxZoom: 19,
                 detectRetina: true
-            }).addTo(window.map);
+            }).addTo(map);
 
-            // Add the bus marker
-            window.busMarker = L.marker([initialLat, initialLng], {
+            busMarker = L.marker([initialLat, initialLng], {
                 icon: busIcon,
                 title: 'Your Bus',
                 zIndexOffset: 1000
-            }).addTo(window.map);
+            }).addTo(map);
 
-            // Add popup to the marker
-            window.busMarker.bindPopup('Your Bus').openPopup();
+            busMarker.bindPopup('Your Bus').openPopup();
 
-            // Force a resize to ensure proper rendering
             setTimeout(() => {
-                if (window.map) {
-                    window.map.invalidateSize({ pan: false });
+                if (map) {
+                    map.invalidateSize({ pan: false });
                 }
             }, 100);
-        }, 100); // Initial map creation delay
+        }, 100);
     }
 
-    // Update the map with a new location (assumes map is already initialized)
-    function updateLeafletMapLocation(lat, lng, routePath = []) {
-        // Ensure the map container has the right dimensions (in case it was hidden or resized)
+    async function updateLeafletMapLocation(lat, lng, routePath = []) {
         const mapElement = document.getElementById('dashboard-map');
         if (mapElement) {
             mapElement.style.height = '400px';
             mapElement.style.width = '100%';
         }
 
-        // If map is not initialized, try to initialize it (should ideally happen once in fetchDashboardData)
-        if (!window.map) {
+        if (!map) {
             console.warn('Map not initialized when updateLeafletMapLocation called. Initializing now...');
             initLeafletMap(lat, lng);
-            // After initialization, wait a bit for the map to render before updating elements
-            setTimeout(() => {
-                updateMapWithLocation(lat, lng, routePath);
+            setTimeout(async () => {
+                await updateMapWithLocation(lat, lng, routePath);
             }, 200);
             return;
         }
 
-        updateMapWithLocation(lat, lng, routePath);
+        await updateMapWithLocation(lat, lng, routePath);
     }
 
-    // Helper function to update map with location and route
-    function updateMapWithLocation(lat, lng, routePath = []) {
-        if (!window.map) {
+    async function getRoadRoute(stops) {
+        console.log('Getting road route for stops:', stops);
+        if (!stops || stops.length < 2) {
+            console.warn('Not enough stops to calculate route');
+            return [];
+        }
+        
+        try {
+            const coordinates = stops.map(stop => `${stop.lng},${stop.lat}`).join(';');
+            const profile = 'driving';
+            const url = `https://router.project-osrm.org/route/v1/${profile}/${coordinates}?overview=full&geometries=geojson`;
+            
+            console.log('Fetching route from OSRM:', url);
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`OSRM API error: ${response.status} - ${errorText}`);
+            }
+            
+            const data = await response.json();
+            console.log('OSRM response:', data);
+            
+            if (data.code !== 'Ok' || !data.routes || data.routes.length === 0) {
+                throw new Error('No valid route found in OSRM response');
+            }
+            
+            const routeCoordinates = data.routes[0].geometry.coordinates.map(coord => [
+                parseFloat(coord[1].toFixed(6)), 
+                parseFloat(coord[0].toFixed(6))  
+            ]);
+            
+            console.log('Generated route with', routeCoordinates.length, 'points');
+            return routeCoordinates;
+            
+        } catch (error) {
+            console.error('Error getting road route, falling back to straight line:', error);
+            return stops.map(stop => [
+                parseFloat(stop.lat.toFixed(6)),
+                parseFloat(stop.lng.toFixed(6))
+            ]);
+        }
+    }
+
+    async function updateMapWithLocation(lat, lng, routePath = []) {
+        if (!map) {
             console.error('Map object is null in updateMapWithLocation.');
-            return; // Cannot update if map is not initialized
+            return; 
         }
 
-        // Update bus marker position
-        if (window.busMarker) {
-            window.busMarker.setLatLng([lat, lng]);
+        if (busMarker) {
+            busMarker.setLatLng([lat, lng]);
         } else {
-            // If marker somehow doesn't exist, create it (should not happen if init is correct)
             const busIcon = L.icon({
                 iconUrl: '../assets/images/bus_marker.png',
                 iconSize: [32, 32],
                 iconAnchor: [16, 16],
                 popupAnchor: [0, -16]
             });
-            window.busMarker = L.marker([lat, lng], {
+            busMarker = L.marker([lat, lng], {
                 icon: busIcon,
                 title: 'Your Bus',
                 zIndexOffset: 1000
-            }).addTo(window.map);
-            window.busMarker.bindPopup('Your Bus').openPopup();
+            }).addTo(map);
+            busMarker.bindPopup('Your Bus').openPopup();
         }
 
-        // Update the route polyline if path is provided
         if (routePath && routePath.length > 0) {
-            // Remove existing polyline if any
-            if (window.polyline) {
-                window.map.removeLayer(window.polyline);
+            console.log('Updating polyline with path:', routePath);
+            if (polyline) {
+                map.removeLayer(polyline);
             }
 
-            // Create new polyline
-            window.polyline = L.polyline(routePath, {
-                color: '#3498db',
-                weight: 5,
-                opacity: 0.7,
-                lineJoin: 'round'
-            }).addTo(window.map);
-
-            // Fit the map to show the entire route with padding
             try {
-                const bounds = window.polyline.getBounds();
+                const validPath = routePath.filter(coord => 
+                    !isNaN(coord[0]) && !isNaN(coord[1]) && 
+                    coord[0] >= -90 && coord[0] <= 90 && 
+                    coord[1] >= -180 && coord[1] <= 180
+                );
+
+                if (validPath.length < 2) {
+                    throw new Error('Not enough valid coordinates for polyline');
+                }
+
+                polyline = L.polyline(validPath, {
+                    color: '#1E88E5',
+                    weight: 6,
+                    opacity: 0.8,
+                    lineJoin: 'round',
+                    lineCap: 'round',
+                    dashArray: '5, 5',
+                    dashOffset: '10'
+                }).addTo(map);
+                
+                console.log('Polyline created successfully');
+            } catch (error) {
+                console.error('Error creating polyline:', error);
+                if (routePath.length >= 2) {
+                    polyline = L.polyline([routePath[0], routePath[routePath.length - 1]], {
+                        color: '#FF5252',
+                        weight: 3,
+                        opacity: 0.7,
+                        dashArray: '10, 10'
+                    }).addTo(map);
+                }
+            }
+
+            try {
+                const bounds = polyline.getBounds();
                 if (bounds.isValid()) {
-                    // Add padding to the bounds
                     const padding = L.point(50, 50);
-                    const sw = window.map.project(bounds.getSouthWest());
-                    const ne = window.map.project(bounds.getNorthEast());
+                    const sw = map.project(bounds.getSouthWest());
+                    const ne = map.project(bounds.getNorthEast());
 
                     sw._subtract(padding);
                     ne._add(padding);
 
-                    window.map.fitBounds(
+                    map.fitBounds(
                         L.latLngBounds(
-                            window.map.unproject(sw),
-                            window.map.unproject(ne)
+                            map.unproject(sw),
+                            map.unproject(ne)
                         ),
-                        { animate: false } // Set animate to false
+                        { animate: false } 
                     );
                 } else {
                     console.warn('Polyline bounds are invalid, cannot fit map to bounds.');
-                    // Fallback to centering on bus if bounds are invalid
-                    window.map.setView([lat, lng], window.map.getZoom());
+                    map.setView([lat, lng], map.getZoom());
                 }
             } catch (e) {
                 console.error('Error fitting map to bounds:', e);
-                // Fallback to simple fitBounds if there's an error
-                window.map.fitBounds(window.polyline.getBounds(), {
+                map.fitBounds(polyline.getBounds(), {
                     padding: [50, 50],
                     animate: false
                 });
             }
         } else {
-            // If no route path, just center on the bus
-            window.map.setView([lat, lng], window.map.getZoom());
+            map.setView([lat, lng], map.getZoom());
         }
 
-        // Force a resize event to ensure proper rendering
         setTimeout(() => {
-            if (window.map) {
-                window.map.invalidateSize({ pan: false });
+            if (map) {
+                map.invalidateSize({ pan: false });
             }
-        }, 100); // Map invalidation delay
+        }, 100); 
     }
 
-    const fetchDashboardData = async () => {
-        try {
-            // Set student info from localStorage or use defaults
-            const studentName = localStorage.getItem('user_name') || 'Student';
-            const studentEmail = localStorage.getItem('user_email') || 'student@git.edu';
-            const studentPhone = localStorage.getItem('user_phone') || '9876543210';
+    let unsubscribeFromBusLocation = null; // To store the unsubscribe function for bus location
+    let unsubscribeFromAssignedBus = null; // To store the unsubscribe function for assigned bus
 
-            studentNameSpan.textContent = studentName;
-            studentEmailSpan.textContent = studentEmail;
-            studentPhoneSpan.textContent = studentPhone;
+    const subscribeToStudentDashboardData = async (uid) => {
+        // Fetch student details
+        const userDocRef = doc(db, "users", uid);
+        const userDocSnap = await getDoc(userDocRef);
 
-            // Fetch bus schedule from API
-            const headers = getAuthHeaders();
-            const busScheduleResponse = await fetch(`${API_BASE_URL}/students/buses`, { headers });
-            const busScheduleData = await busScheduleResponse.json();
+        if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            studentNameSpan.textContent = userData.name || 'Student';
+            studentEmailSpan.textContent = userData.email || 'N/A';
+            studentPhoneSpan.textContent = userData.phone || 'N/A';
+            assignedBusId = userData.assigned_bus_id || null; // Assuming a field 'assigned_bus_id' in user doc
 
-            if (!busScheduleResponse.ok) {
-                throw new Error(busScheduleData.detail || 'Failed to fetch bus schedule');
-            }
-
-            const studentId = localStorage.getItem('student_id'); // Assuming student_id is stored in localStorage
-            // Find the bus details for the current student's assigned bus, or the first bus if not assigned
-            let busDetails = null;
-            if (studentId) {
-                const student = await fetch(`${API_BASE_URL}/students/${studentId}`, { headers }); // Assuming an endpoint to get student details
-                if (student.ok) {
-                    const studentData = await student.json();
-                    const assignedBusId = studentData.assigned_bus_id; // Assuming student data has assigned_bus_id
-                    if (assignedBusId) {
-                        busDetails = busScheduleData.find(bus => bus.id === assignedBusId);
+            if (assignedBusId) {
+                // Subscribe to assigned bus details
+                unsubscribeFromAssignedBus = onSnapshot(doc(db, "buses", assignedBusId), async (busDoc) => {
+                    if (busDoc.exists()) {
+                        const busDetails = { id: busDoc.id, ...busDoc.data() };
+                        renderBusDetails(busDetails);
+                        // Start live bus location tracking
+                        if (unsubscribeFromBusLocation) {
+                            unsubscribeFromBusLocation(); // Unsubscribe from previous bus location if any
+                        }
+                        subscribeToBusLocation(busDetails.id, busDetails.route_stops);
+                    } else {
+                        console.warn("Assigned bus not found in Firestore:", assignedBusId);
+                        showToast('Assigned bus not found.', 'error');
+                        renderNoBusDetails();
                     }
-                }
-            }
-
-            // Fallback to the first bus if no specific bus is assigned or found
-            if (!busDetails && busScheduleData.length > 0) {
-                busDetails = busScheduleData[0];
-            }
-
-            if (!busDetails) {
-                // Handle case where no bus details are found at all
-                console.warn('No bus details found for the student, or no buses available.');
-                // Optionally, display a message to the user or redirect
-                busCodeDisplay.textContent = "N/A";
-                busRouteNameDisplay.textContent = "Route: N/A";
-                busDepartureTimeDisplay.textContent = "N/A";
-                driverNameDisplay.textContent = "Driver N/A";
-                busCapacityDisplay.textContent = "N/A";
-                routeStopsList.innerHTML = '<li>No route information available.</li>';
-                busActiveMessageDisplay.textContent = "No bus assigned or data unavailable.";
-                // Set a default location for the map if no bus is found
-                if (!window.map) {
-                    initLeafletMap(15.85, 74.55); // Default KLS GIT coordinates
-                }
-                return; // Exit the function as no bus data to process
-            }
-
-            // Update currentBusId for live tracking
-            currentBusId = busDetails.id;
-
-            // Update bus information
-            busCodeDisplay.textContent = `GIT-${String(busDetails.id).padStart(3, '0')}`;
-            busRouteNameDisplay.textContent = `Route: ${busDetails.route_name}`;
-            busDepartureTimeDisplay.textContent = busDetails.start_time;
-
-            // Set driver information from fetched data
-            driverNameDisplay.textContent = busDetails.driver_name || "Driver N/A";
-            // Assuming driver phone is not directly in this /student/buses response, add if available
-            // driverNameDisplay.setAttribute('data-phone', busDetails.driver_phone || 'N/A');
-
-            // Set bus capacity from fetched data
-            busCapacityDisplay.textContent = `${busDetails.capacity || 40} passengers`;
-
-            // Update route stops
-            routeStopsList.innerHTML = '';
-            if (busDetails.stops && busDetails.stops.length > 0) {
-                busDetails.stops.forEach((stop, index) => {
-                    const li = document.createElement('li');
-                    let iconSrc = "../assets/images/map_pin_blue.png";
-                    let label = "";
-
-                    if (index === 0) {
-                        iconSrc = "../assets/images/map_pin_green.png";
-                        label = "Starting Point";
-                        li.classList.add('start-point');
-                    } else if (index === busDetails.stops.length - 1) {
-                        iconSrc = "../assets/images/map_pin_red.png";
-                        label = "Destination";
-                        li.classList.add('destination-point');
-                    }
-
-                    li.innerHTML = `<img src="${iconSrc}" alt="Map Pin"> ${stop.name}${label ? ` <span class="label">${label}</span>` : ''}`;
-                    routeStopsList.appendChild(li);
+                }, (error) => {
+                    console.error("Error fetching assigned bus details:", error);
+                    showToast('Failed to load bus details.', 'error');
+                    renderNoBusDetails();
                 });
             } else {
-                routeStopsList.innerHTML = '<li>No route stops available.</li>';
+                console.warn("No bus assigned to this student.");
+                showToast('No bus assigned to you.', 'info');
+                renderNoBusDetails();
             }
+        } else {
+            console.warn("User document not found for UID:", uid);
+            showToast('User profile not found. Please contact support.', 'error');
+            // Optionally, sign out if user doc is missing
+            signOut(auth);
+            window.location.href = '../login.html';
+        }
+    };
 
-            // For demo purposes, set a random ETA between 5-30 minutes
-            // This will be overridden by live tracking ETA if available
-            const randomEta = Math.floor(Math.random() * 25) + 5;
-            const now = new Date();
-            now.setMinutes(now.getMinutes() + randomEta);
-            busEtaCollegeDisplay.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const renderBusDetails = async (busDetails) => {
+        busCodeDisplay.textContent = busDetails.bus_number || `GIT-${busDetails.id}`;
+        busRouteNameDisplay.textContent = `Route: ${busDetails.route_name || 'N/A'}`;
+        busDepartureTimeDisplay.textContent = busDetails.departure_time || 'N/A';
+        driverNameDisplay.textContent = busDetails.driver_name || "Driver N/A"; // Assuming driver_name in bus doc
+        busCapacityDisplay.textContent = `${busDetails.capacity || 0} passengers`;
 
-            // Initialize Leaflet Map (called only once here)
-            if (!window.map && busDetails.stops && busDetails.stops.length > 0) {
-                initLeafletMap(busDetails.stops[0].lat, busDetails.stops[0].lng);
-            } else if (!window.map) {
-                // Default coordinates if no bus stops are available and map not initialized
-                const defaultLat = 15.85;
-                const defaultLng = 74.55;
-                initLeafletMap(defaultLat, defaultLng);
-            }
-            
-            // Always update map location after initialization or data fetch
-            if (busDetails.stops && busDetails.stops.length > 0) {
-                const leafletRoutePath = busDetails.stops.map(stop => [stop.lat, stop.lng]);
-                updateLeafletMapLocation(busDetails.stops[0].lat, busDetails.stops[0].lng, leafletRoutePath);
+        // Update route stops
+        routeStopsList.innerHTML = '';
+        if (busDetails.route_stops && busDetails.route_stops.length > 0) {
+            busDetails.route_stops.forEach((stop, index) => {
+                const li = document.createElement('li');
+                let iconSrc = "../assets/images/map_pin_blue.png";
+                let label = "";
+
+                if (index === 0) {
+                    iconSrc = "../assets/images/map_pin_green.png";
+                    label = "Starting Point";
+                    li.classList.add('start-point');
+                } else if (index === busDetails.route_stops.length - 1) {
+                    iconSrc = "../assets/images/map_pin_red.png";
+                    label = "Destination";
+                    li.classList.add('destination-point');
+                }
+
+                li.innerHTML = `<img src="${iconSrc}" alt="Map Pin"> ${stop.name}${label ? ` <span class="label">${label}</span>` : ''}`;
+                routeStopsList.appendChild(li);
+            });
+        } else {
+            routeStopsList.innerHTML = '<li>No route stops available.</li>';
+        }
+
+        // Initialize map if not already
+        if (!map && busDetails.route_stops && busDetails.route_stops.length > 0) {
+            initLeafletMap(busDetails.route_stops[0].lat, busDetails.route_stops[0].lng);
+        } else if (!map) {
+            initLeafletMap(15.85, 74.55); // Default KLS GIT coordinates
+        }
+    };
+
+    const renderNoBusDetails = () => {
+        busCodeDisplay.textContent = "N/A";
+        busRouteNameDisplay.textContent = "Route: N/A";
+        busDepartureTimeDisplay.textContent = "N/A";
+        driverNameDisplay.textContent = "Driver N/A";
+        busCapacityDisplay.textContent = "N/A";
+        routeStopsList.innerHTML = '<li>No route information available.</li>';
+        busActiveMessageDisplay.textContent = "No bus assigned or data unavailable.";
+        busStatusSpan.textContent = "Inactive";
+        busStatusSpan.classList.remove('status-active');
+        busStatusSpan.classList.add('status-inactive');
+        // Set a default location for the map if no bus is found
+        if (!map) {
+            initLeafletMap(15.85, 74.55); // Default KLS GIT coordinates
+        } else {
+            updateLeafletMapLocation(15.85, 74.55, []); // Center map on default location
+        }
+    };
+
+    const subscribeToBusLocation = (busId, routeStops) => {
+        const busLocationDocRef = doc(db, "bus_locations", busId.toString()); // Assuming busId is string or needs conversion
+        unsubscribeFromBusLocation = onSnapshot(busLocationDocRef, async (locationDoc) => {
+            if (locationDoc.exists()) {
+                const locationData = locationDoc.data();
+                const currentLat = locationData.latitude;
+                const currentLng = locationData.longitude;
+                const estimatedArrival = locationData.estimated_arrival; // Assuming this field exists
+
+                if (currentLat && currentLng) {
+                    let routePath = [];
+                    if (routeStops && routeStops.length > 1) {
+                        routePath = await getRoadRoute(routeStops); // Get road route for display
+                    }
+                    updateLeafletMapLocation(currentLat, currentLng, routePath);
+                    if (estimatedArrival) {
+                        busEtaCollegeDisplay.textContent = estimatedArrival;
+                    }
+                    busStatusSpan.textContent = "Active";
+                    busStatusSpan.classList.remove('status-inactive');
+                    busStatusSpan.classList.add('status-active');
+                    busActiveMessageDisplay.textContent = "Bus is on the way";
+                }
             } else {
-                const defaultLat = 15.85;
-                const defaultLng = 74.55;
-                updateLeafletMapLocation(defaultLat, defaultLng);
+                console.warn("Bus location document not found for bus ID:", busId);
+                showToast('Live tracking data unavailable for your bus.', 'info');
+                busStatusSpan.textContent = "Inactive";
+                busStatusSpan.classList.remove('status-active');
+                busStatusSpan.classList.add('status-inactive');
+                busActiveMessageDisplay.textContent = "Bus tracking data unavailable.";
             }
+        }, (error) => {
+            console.error("Error subscribing to bus location:", error);
+            showToast('Failed to get live bus location.', 'error');
+        });
+    };
 
-            // Start fetching live bus location for map
-            // The setInterval for fetchBusLocationForMap is handled within fetchBusLocationForMap itself.
-            fetchBusLocationForMap();
-
-        } catch (error) {
-            console.error('Error fetching dashboard data:', error);
-            // Handle errors, e.g., redirect to login if token is invalid
-            if (error.message.includes('401') || error.message.includes('access token')) {
-                localStorage.removeItem('access_token');
+    // Logout functionality
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                if (unsubscribeFromBusLocation) unsubscribeFromBusLocation();
+                if (unsubscribeFromAssignedBus) unsubscribeFromAssignedBus();
+                await signOut(auth);
+                localStorage.removeItem('firebase_uid');
                 localStorage.removeItem('user_role');
                 window.location.href = '../login.html';
-            }
-        }
-    };
-
-    const fetchBusLocationForMap = async () => {
-        try {
-            // For demo purposes, we'll use a default location if the API fails
-            const defaultLocation = {
-                latitude: 15.85,  // Default to KLS GIT coordinates
-                longitude: 74.55
-            };
-
-            let locationData = null;
-
-            // Try to get real bus location
-            try {
-                const response = await fetch(`${API_BASE_URL}/tracking/bus/${currentBusId}`, {
-                    method: 'GET',
-                    headers: getAuthHeaders()
-                });
-
-                if (response.ok) {
-                    locationData = await response.json();
-                    if (locationData.latitude && locationData.longitude) {
-                        // If we have a valid location, use it
-                        updateLeafletMapLocation(locationData.latitude, locationData.longitude);
-
-                        // Update ETA if available
-                        if (locationData.estimated_arrival) {
-                            busEtaCollegeDisplay.textContent = locationData.estimated_arrival;
-                        }
-
-                        // Mark bus as active
-                        busStatusSpan.textContent = "Active";
-                        busStatusSpan.classList.remove('status-inactive');
-                        busStatusSpan.classList.add('status-active');
-                        busActiveMessageDisplay.textContent = "Bus is on the way";
-
-                        // Schedule next update
-                        setTimeout(fetchBusLocationForMap, 5000); // Call itself after a delay
-                        return;
-                    }
-                }
             } catch (error) {
-                console.error('Error fetching bus location:', error);
+                console.error('Error during logout:', error);
+                showToast('Failed to logout.', 'error');
             }
-
-            // If we get here, use default location and mark as inactive
-            updateLeafletMapLocation(defaultLocation.latitude, defaultLocation.longitude);
-
-            // Mark bus as inactive if we couldn't get a valid location
-            busStatusSpan.textContent = "Inactive";
-            busStatusSpan.classList.remove('status-active');
-            busStatusSpan.classList.add('status-inactive');
-            busActiveMessageDisplay.textContent = "Bus tracking data unavailable.";
-
-            // Schedule next update even if we're using default location or failed
-            setTimeout(fetchBusLocationForMap, 10000); // Call itself after a delay
-
-        } catch (error) {
-            console.error('Error in fetchBusLocationForMap:', error);
-            // Schedule next update even if there was an error
-            setTimeout(fetchBusLocationForMap, 10000);
-        }
-    };
-
-    // Logout functionality (assuming a logout button or link is added in the HTML)
-    const logoutBtn = document.getElementById('logout-btn'); // Ensure this ID exists in your header
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('user_role');
-            window.location.href = '../login.html';
         });
     }
 
-    // Initial calls
+    // Initial calls and Firebase Auth State Listener
     updateCurrentTime();
     setInterval(updateCurrentTime, 60000); // Update every minute
-    fetchDashboardData();
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // User is signed in, fetch dashboard data
+            subscribeToStudentDashboardData(user.uid);
+        } else {
+            // User is signed out, redirect to login page
+            showToast('You are not logged in. Redirecting to login.', 'info');
+            window.location.href = '../login.html';
+        }
+    });
 });
 

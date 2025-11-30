@@ -136,7 +136,8 @@
         </div>
     </footer>
 
-    <script src="assets/js/register.js"></script>
+    <script type="module" src="assets/js/firebase-init.js"></script>
+    <script type="module" src="assets/js/register.js"></script>
     <script>
         // Dynamic form fields based on role selection
         const roleSelect = document.getElementById('role-select');
@@ -146,19 +147,21 @@
         const passwordFields = document.querySelectorAll('.password-field');
 
         const toggleFields = () => {
+            // First, set all relevant inputs to not required
+            studentFields.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+            driverFields.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+            adminFields.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+            // studentEmailInput.removeAttribute('required'); // This line caused the error
+
             studentFields.style.display = 'none';
             driverFields.style.display = 'none';
             adminFields.style.display = 'none';
-
-            // Make all password fields required by default
-            passwordFields.forEach(fieldGroup => {
-                fieldGroup.querySelector('input[type="password"]').required = true;
-            });
 
             const selectedRole = roleSelect.value;
             if (selectedRole === 'student') {
                 studentFields.style.display = 'block';
                 studentFields.querySelectorAll('input').forEach(input => input.required = true);
+                // studentEmailInput.required = true; // This line also caused the error
             } else if (selectedRole === 'driver') {
                 driverFields.style.display = 'block';
                 driverFields.querySelectorAll('input').forEach(input => input.required = true);
@@ -166,6 +169,7 @@
                 adminFields.style.display = 'block';
                 adminFields.querySelectorAll('input').forEach(input => input.required = true);
             }
+            // Password fields are always required and are outside role-specific divs, so no change needed for them here.
         };
 
         roleSelect.addEventListener('change', toggleFields);

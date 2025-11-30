@@ -1,11 +1,12 @@
+import { auth, db } from "./firebase-init.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { collection, query, onSnapshot, getDoc, doc, addDoc, updateDoc, deleteDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 // admin_buses.js
-const API_BASE_URL = 'http://localhost:8001'; // Define API_BASE_URL globally
+// Removed API_BASE_URL as we are now using Firebase
 
 let busManagementList;
 let busIdInput;
-let busNameInput;
-let routeAssignedInput;
-let driverAssignedInput;
 let busNumberInput;
 let routeNameInput;
 let startingPointInput;
@@ -15,15 +16,48 @@ let estimatedArrivalInput;
 let routeStopsContainer;
 let addStopBtn;
 let closeBusFormBtn;
-let busFormContainer; // Declare globally
+let busFormContainer; 
+let addBusBtn; // Declare addBusBtn globally
+
+let isAdmin = false;
+
+// Function to show toast messages
+function showToast(message, type = 'success') {
+    const toastContainer = document.getElementById('toast-container') || (() => {
+        const div = document.createElement('div');
+        div.id = 'toast-container';
+        document.body.appendChild(div);
+        return div;
+    })();
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
 
 // Function declarations (hoisted)
 function editBus(id, bus_number, route_name, starting_point, assigned_driver_id, departure_time, estimated_arrival, route_stops) {
+    if (!isAdmin) {
+        showToast('You do not have permission to edit buses.', 'error');
+        return;
+    }
+    document.getElementById('bus-form-container').querySelector('h3').textContent = 'Edit Bus';
     busIdInput.value = id || '';
     busNumberInput.value = bus_number || '';
     routeNameInput.value = route_name || '';
     startingPointInput.value = starting_point || '';
-    assignedDriverSelect.value = assigned_driver_id || '';
+    // Ensure assignedDriverSelect has the correct option before setting value
+    if (assignedDriverSelect.querySelector(`option[value="${assigned_driver_id}"]`)) {
+        assignedDriverSelect.value = assigned_driver_id;
+    } else {
+        assignedDriverSelect.value = ''; // Reset if driver not found
+    }
     departureTimeInput.value = departure_time || '';
     estimatedArrivalInput.value = estimated_arrival || '';
 
@@ -40,78 +74,53 @@ function editBus(id, bus_number, route_name, starting_point, assigned_driver_id,
 }
 
 async function deleteBus(id) {
+    if (!isAdmin) {
+        showToast('You do not have permission to delete buses.', 'error');
+        return;
+    }
     if (!id || !confirm('Are you sure you want to delete this bus? This action cannot be undone.')) {
         return;
     }
     
     try {
-        const token = localStorage.getItem('access_token');
-        const response = await fetch(`${API_BASE_URL}/admin/buses/${id}`, { // Changed to admin/buses
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.detail || 'Failed to delete bus');
-        }
-
-        fetchBuses();
-        alert('Bus deleted successfully!');
+        await deleteDoc(doc(db, "buses", id));
+        showToast('Bus deleted successfully!', 'success');
     } catch (error) {
         console.error('Error deleting bus:', error);
-        alert(error.message || 'An error occurred while deleting the bus');
+        showToast('An error occurred while deleting the bus.', 'error');
     }
 }
 
-async function fetchBuses() {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-        window.location.href = '../login.html'; // Corrected path
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/admin/buses`, {
-            headers: getAuthHeaders(),
+// Real-time listener for buses
+function subscribeToBuses() {
+    const q = query(collection(db, "buses"), orderBy("bus_number"));
+    onSnapshot(q, (snapshot) => {
+        const buses = [];
+        snapshot.forEach((doc) => {
+            buses.push({ id: doc.id, ...doc.data() });
         });
-
-        if (!response.ok) {
-            console.error('HTTP Error during fetchBuses:', response.status, response.statusText);
-            const errorData = await response.json().catch(() => ({}));
-            console.error('Error data:', errorData);
-            if (response.status === 401) {
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('user_role');
-                window.location.href = '../login.html'; // Corrected path
-            }
-            throw new Error(errorData.detail || `Failed to fetch buses (Status: ${response.status})`);
-        }
-
-        const buses = await response.json();
         formatBusData(buses);
-
-    } catch (error) {
-        console.error('Error fetching buses:', error);
-        alert('Failed to load buses. Please try again.');
-    }
+    }, (error) => {
+        console.error("Error fetching buses: ", error);
+        showToast('Failed to load buses.', 'error');
+    });
 }
 
 async function fetchDrivers() {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-        return;
-    }
-    try {
-        const response = await fetch(`${API_BASE_URL}/admin/drivers`, {
-            headers: getAuthHeaders(),
-        });
-        if (!response.ok) {
-            throw new Error('Failed to fetch drivers');
-        }
-        const drivers = await response.json();
+    // In a real Firebase app, drivers would likely be stored in Firestore as well.
+    // For this exercise, we'll simulate fetching them or load from a predefined list.
+    // For now, return a dummy driver.
+    return [{ id: "driver1", name: "John Doe" }]; 
+    /*
+    const driversCol = collection(db, "drivers");
+    const driverSnapshot = await getDocs(driversCol);
+    const drivers = driverSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return drivers;
+    */
+}
+
+async function populateDriversDropdown() {
+    const drivers = await fetchDrivers();
         assignedDriverSelect.innerHTML = '<option value="">Select Driver</option>';
         drivers.forEach(driver => {
             const option = document.createElement('option');
@@ -119,14 +128,14 @@ async function fetchDrivers() {
             option.textContent = driver.name;
             assignedDriverSelect.appendChild(option);
         });
-    } catch (error) {
-        console.error('Error fetching drivers:', error);
-        alert('Failed to load drivers.');
-    }
 }
 
 function formatBusData(buses) {
     busManagementList.innerHTML = '';
+    if (buses.length === 0) {
+        busManagementList.innerHTML = '<p>No buses found.</p>';
+        return;
+    }
     buses.forEach(bus => {
         const busCard = document.createElement('div');
         busCard.className = 'bus-fleet-item card';
@@ -142,68 +151,73 @@ function formatBusData(buses) {
             <div class="bus-fleet-route-info">
                 <p class="route-name">Start: ${bus.starting_point || 'N/A'}</p>
                 <p class="route-stops-short">Dep: ${bus.departure_time || 'N/A'} - Arr: ${bus.estimated_arrival || 'N/A'}</p>
-                <p class="route-stops-short">Stops: ${bus.route_stops ? bus.route_stops.join(', ') : 'N/A'}</p>
+                <p class="route-stops-short">Stops: ${bus.route_stops ? bus.route_stops.map(stop => stop.name).join(', ') : 'N/A'}</p>
             </div>
             <div class="bus-fleet-actions">
-                <button class="btn secondary-btn edit-bus-btn" data-bus='${JSON.stringify(bus)}'>
+                <button class="btn secondary-btn edit-bus-btn" data-bus-id="${bus.id}">
                     <i class="fas fa-edit"></i> Edit
                 </button>
-                <button onclick="deleteBus(${bus.id})" class="btn danger-btn">
+                <button class="btn danger-btn delete-bus-btn" data-bus-id="${bus.id}">
                     <i class="fas fa-trash-alt"></i> Delete
                 </button>
             </div>
         `;
         busManagementList.appendChild(busCard);
 
-        const editButton = busCard.querySelector('.edit-bus-btn');
-        editButton.addEventListener('click', (event) => {
-            const busData = JSON.parse(event.currentTarget.dataset.bus);
+        busCard.querySelector('.edit-bus-btn').addEventListener('click', (event) => {
+            const busId = event.currentTarget.dataset.busId;
+            const selectedBus = buses.find(b => b.id === busId);
+            if (selectedBus) {
             editBus(
-                busData.id,
-                busData.bus_number || '',
-                busData.route_name || '',
-                busData.starting_point || '',
-                busData.assigned_driver_id || 0,
-                busData.departure_time || '',
-                busData.estimated_arrival || '',
-                busData.route_stops || []
+                    selectedBus.id,
+                    selectedBus.bus_number || '',
+                    selectedBus.route_name || '',
+                    selectedBus.starting_point || '',
+                    selectedBus.assigned_driver_id || '',
+                    selectedBus.departure_time || '',
+                    selectedBus.estimated_arrival || '',
+                    // When editing, pass only the names of the stops, not lat/lng if we are not using them anymore in the UI
+                    selectedBus.route_stops ? selectedBus.route_stops.map(stop => ({ name: stop.name })) : []
             );
+            }
+        });
+        busCard.querySelector('.delete-bus-btn').addEventListener('click', (event) => {
+            const busId = event.currentTarget.dataset.busId;
+            deleteBus(busId);
         });
     });
-}
-
-function getAuthHeaders() {
-    const token = localStorage.getItem('access_token');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-    };
+    // Enable/disable add bus button based on admin status
+    if (addBusBtn) {
+        addBusBtn.style.display = isAdmin ? 'block' : 'none';
+    }
 }
 
 async function saveBus(event) {
     event.preventDefault();
     
+    if (!isAdmin) {
+        showToast('You do not have permission to add/edit buses.', 'error');
+        return;
+    }
+    
     const id = busIdInput.value;
     const bus_number = busNumberInput.value.trim();
     const route_name = routeNameInput.value.trim();
     const starting_point = startingPointInput.value.trim();
-    const assigned_driver_id = assignedDriverSelect.value ? parseInt(assignedDriverSelect.value) : null; // Can be null if no driver selected
+    const assigned_driver_id = assignedDriverSelect.value || null; 
     const departure_time = departureTimeInput.value.trim();
     const estimated_arrival = estimatedArrivalInput.value.trim();
     const route_stops_elements = routeStopsContainer.querySelectorAll('.route-stop-item');
     const route_stops = Array.from(route_stops_elements).map(stopGroup => {
         const nameInput = stopGroup.querySelector('.route-stop-name-input');
-        const latInput = stopGroup.querySelector('.route-stop-lat-input');
-        const lngInput = stopGroup.querySelector('.route-stop-lng-input');
         return {
             name: nameInput ? nameInput.value.trim() : '',
-            lat: latInput && latInput.value ? parseFloat(latInput.value) : 0.0,
-            lng: lngInput && lngInput.value ? parseFloat(lngInput.value) : 0.0,
+            // Removed lat and lng as they are no longer asked in the UI
         };
-    }).filter(stop => stop.name !== ''); // Filter out empty stops
+    }).filter(stop => stop.name !== ''); 
 
     if (!bus_number || !route_name || !starting_point || !departure_time || !estimated_arrival || route_stops.length === 0) {
-        alert('Please fill in all required fields and add at least one route stop.');
+        showToast('Please fill in all required fields and add at least one route stop.', 'error');
         return;
     }
 
@@ -214,72 +228,71 @@ async function saveBus(event) {
         assigned_driver_id, 
         departure_time, 
         estimated_arrival, 
-        route_stops 
+        route_stops,
+        createdAt: id ? busData.createdAt : new Date().toISOString(), 
+        updatedAt: new Date().toISOString()
     };
     
     try {
-        const method = id ? 'PUT' : 'POST';
-        const url = id ? 
-            `${API_BASE_URL}/admin/buses/${id}` : 
-            `${API_BASE_URL}/admin/buses`;
-
-        const response = await fetch(url, {
-            method,
-            headers: getAuthHeaders(),
-            body: JSON.stringify(busData),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.detail || 'Failed to save bus');
+        if (id) {
+            await updateDoc(doc(db, "buses", id), busData);
+            showToast('Bus updated successfully!', 'success');
+        } else {
+            await addDoc(collection(db, "buses"), busData);
+            showToast('Bus added successfully!', 'success');
         }
 
         busFormContainer.style.display = 'none';
-        await fetchBuses();
-        alert(`Bus ${id ? 'updated' : 'added'} successfully!`);
 
     } catch (error) {
         console.error('Error saving bus:', error);
-        alert(error.message || 'An error occurred while saving the bus');
+        showToast('An error occurred while saving the bus.', 'error');
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     busManagementList = document.getElementById('bus-management-list');
-    const addBusBtn = document.getElementById('add-bus-btn');
-    busFormContainer = document.getElementById('bus-form-container'); // Assign to global
+    addBusBtn = document.getElementById('add-bus-btn'); // Assign to global
+    busFormContainer = document.getElementById('bus-form-container'); 
     const busForm = document.getElementById('bus-form');
     const cancelBusFormBtn = document.getElementById('cancel-bus-form');
     const logoutBtn = document.getElementById('logout-btn');
 
     // Assign DOM Elements to global variables
     busIdInput = document.getElementById('bus-id');
-    busNameInput = document.getElementById('bus-name');
-    routeAssignedInput = document.getElementById('route-assigned');
-    driverAssignedInput = document.getElementById('driver-assigned');
-    busNumberInput = document.getElementById('bus-number'); // New
-    routeNameInput = document.getElementById('route-name'); // New
-    startingPointInput = document.getElementById('starting-point'); // New
-    assignedDriverSelect = document.getElementById('assigned-driver'); // New
-    departureTimeInput = document.getElementById('departure-time'); // New
-    estimatedArrivalInput = document.getElementById('estimated-arrival'); // New
-    routeStopsContainer = document.getElementById('route-stops-container'); // New
-    addStopBtn = document.getElementById('add-stop-btn'); // New
-    closeBusFormBtn = document.getElementById('close-bus-form'); // New
+    busNumberInput = document.getElementById('bus-number');
+    routeNameInput = document.getElementById('route-name');
+    startingPointInput = document.getElementById('starting-point');
+    assignedDriverSelect = document.getElementById('assigned-driver');
+    departureTimeInput = document.getElementById('departure-time');
+    estimatedArrivalInput = document.getElementById('estimated-arrival');
+    routeStopsContainer = document.getElementById('route-stops-container');
+    addStopBtn = document.getElementById('add-stop-btn');
+    closeBusFormBtn = document.getElementById('close-bus-form');
 
-    // Make functions available globally
-    window.editBus = editBus;
-    window.deleteBus = deleteBus;
+    // Add toast container to body if it doesn't exist
+    if (!document.getElementById('toast-container')) {
+        const toastDiv = document.createElement('div');
+        toastDiv.id = 'toast-container';
+        document.body.appendChild(toastDiv);
+    }
 
     // Event Listeners
+    if (addBusBtn) {
     addBusBtn.addEventListener('click', () => {
+            if (!isAdmin) {
+                showToast('You do not have permission to add buses.', 'error');
+                return;
+            }
+            document.getElementById('bus-form-container').querySelector('h3').textContent = 'Add New Bus';
         busForm.reset();
         busIdInput.value = '';
-        routeStopsContainer.innerHTML = ''; // Clear stops when adding new bus
-        addStopField(); // Add an empty stop field for new bus
+            routeStopsContainer.innerHTML = ''; 
+            addStopField(); 
         busFormContainer.style.display = 'block';
     });
+    }
 
     cancelBusFormBtn.addEventListener('click', () => {
         busFormContainer.style.display = 'none';
@@ -289,28 +302,53 @@ document.addEventListener('DOMContentLoaded', () => {
     closeBusFormBtn.addEventListener('click', () => {
         busFormContainer.style.display = 'none';
     });
-    addStopBtn.addEventListener('click', () => addStopField({ name: '', lat: '', lng: '' })); // Pass empty object for new stop
+    addStopBtn.addEventListener('click', () => addStopField({ name: '' }));
 
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('user_role');
-        window.location.href = '../login/admin.html';
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            localStorage.removeItem('firebase_uid');
+            window.location.href = '../login.html';
+        } catch (error) {
+            console.error('Error during logout:', error);
+            showToast('Failed to logout.', 'error');
+        }
     });
 
-    // Initialize
-    fetchBuses();
-    fetchDrivers();
-    // No initial addStopField() call here, it's handled when adding/editing
+    // Firebase Auth State Listener
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // User is signed in, check their role
+            const userDocRef = doc(db, "users", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
+                isAdmin = userData.isAdmin || false;
+                if (!isAdmin) {
+                    showToast('You do not have administrative privileges.', 'error');
+                    // Optionally redirect non-admin users or hide admin features
+                    // window.location.href = '../student/dashboard.html'; 
+                }
+            } else {
+                console.warn("User document not found for UID:", user.uid);
+                isAdmin = false;
+            }
+            populateDriversDropdown();
+            subscribeToBuses(); // Start real-time listener for buses
+        } else {
+            // User is signed out, redirect to login page
+            window.location.href = '../login.html';
+        }
+    });
+
 });
 
 // New function to add a route stop input field
-function addStopField(stop = { name: '', lat: '', lng: '' }) {
+function addStopField(stop = { name: '' }) { // Changed default stop object
     const stopInputGroup = document.createElement('div');
     stopInputGroup.className = 'input-group route-stop-item';
     stopInputGroup.innerHTML = `
         <input type="text" class="route-stop-name-input" placeholder="Stop Name" value="${stop.name}" required>
-        <input type="number" class="route-stop-lat-input" placeholder="Latitude" value="${stop.lat}" step="any" required>
-        <input type="number" class="route-stop-lng-input" placeholder="Longitude" value="${stop.lng}" step="any" required>
         <button type="button" class="remove-stop-btn text-btn">&times;</button>
     `;
     routeStopsContainer.appendChild(stopInputGroup);
